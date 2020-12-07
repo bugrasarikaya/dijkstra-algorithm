@@ -84,7 +84,7 @@ int graph_existing[8][8] = //This graph is taken from our presentation and this 
 	{ INFINITY, INFINITY, 10, 40, INFINITY, 0, INFINITY, INFINITY },
 	{ 20, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, 0, INFINITY },
 	{ INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, 0} };
-void display_graph(int *graph, int vertices_number) {
+void display_graph(int *graph, int vertices_number) { //It is used for verifying.
 	for (int i = 0; i < vertices_number; i++) {
 		for (int j = 0; j < vertices_number; j++) {
 			printf("%d ", *(graph + i * vertices_number + j));
