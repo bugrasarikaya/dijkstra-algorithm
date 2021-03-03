@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
+#include <windows.h> //This program is developed in Visual Studio 2017.
 #define INFINITY 9999
 char edsger_dijkstra[67][105] = { //ASCII picture of Edsger Dijkstra.
 	{"                     . . ..................................:...:::ir7i.::i:  ..........................:"},
@@ -75,15 +75,28 @@ char intro_text[6][99] = {	{ "       ____  _  _ _        _             _        
 							{ "      | |_| | || |   <\\__ \\ |_| | | (_| | \\__ \\  / ___ \\| | (_| | (_) | |  | | |_| | | | | | | | |" },
 							{ "      |____/|_|/ |_|\\_\\___/\\__|_|  \\__,_| |___/ /_/   \\_\\_|\\__, |\\___/|_|  |_|\\__|_| |_|_| |_| |_|" },
 							{ "             |__/                                          |___/                                  " }};
-int graph_existing[8][8] = //This graph is taken from our presentation and this link: https://youtu.be/jT3c45XkPTg (Last visited Dec. 4, 2020.)
-	{ { 0, 20, INFINITY, 80, INFINITY, INFINITY, 90, INFINITY },
-	{ INFINITY, 0, INFINITY, INFINITY, INFINITY, 10, INFINITY, INFINITY},
-	{ INFINITY, INFINITY, 0, 10, INFINITY, 50, INFINITY, 20},
-	{ INFINITY, INFINITY, 10, 0, INFINITY, INFINITY, 20, INFINITY },
-	{ INFINITY, 50, INFINITY, INFINITY, 0, INFINITY, 30, INFINITY },
-	{ INFINITY, INFINITY, 10, 40, INFINITY, 0, INFINITY, INFINITY },
-	{ 20, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, 0, INFINITY },
-	{ INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, 0} };
+int presentation_graph[8][8] =  { //This graph is taken from our presentation and this link: https://youtu.be/jT3c45XkPTg (Last visited Dec. 4, 2020.)
+								{ 0, 20, INFINITY, 80, INFINITY, INFINITY, 90, INFINITY },
+								{ INFINITY, 0, INFINITY, INFINITY, INFINITY, 10, INFINITY, INFINITY},
+								{ INFINITY, INFINITY, 0, 10, INFINITY, 50, INFINITY, 20},
+								{ INFINITY, INFINITY, 10, 0, INFINITY, INFINITY, 20, INFINITY },
+								{ INFINITY, 50, INFINITY, INFINITY, 0, INFINITY, 30, INFINITY },
+								{ INFINITY, INFINITY, 10, 40, INFINITY, 0, INFINITY, INFINITY },
+								{ 20, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, 0, INFINITY },
+								{ INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, 0} };
+int report_graph[10][10] =		{ //This graph is from dijkstra_example_graph_for_program.pdf.
+								{ 0, 45, 56, 13, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY },
+								{ INFINITY, 0, INFINITY, 27, 12, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY },
+								{ INFINITY, INFINITY, 0, 35, INFINITY, 5, INFINITY, INFINITY, INFINITY, INFINITY },
+								{ INFINITY, 27, 35, 0, 77, 41, 29, INFINITY, INFINITY, INFINITY },
+								{ INFINITY, 12, INFINITY, 77, 0, INFINITY, 50, 38, INFINITY, INFINITY },
+								{ INFINITY, INFINITY, 5, 41, INFINITY, 0, 32, INFINITY, 49, INFINITY },
+								{ INFINITY, INFINITY, INFINITY, 29, 50, 32, 0, 21, 9, 3},
+								{ INFINITY, INFINITY, INFINITY, INFINITY, 38, INFINITY, 21, 0, INFINITY, 76},
+								{ INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, 49, 9, INFINITY, 0, 11},
+								{ INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, 0 } };
+
+
 void display_graph(int *graph, int vertices_number) { //It is used for verifying.
 	for (int i = 0; i < vertices_number; i++) {
 		for (int j = 0; j < vertices_number; j++) {
@@ -116,7 +129,7 @@ void min_distance(int min_weighted_node, int *graph, int *weight, int path[], in
 	for (int i = 0; i < vertices_number; i++) {
 		if (weight[min_weighted_node] + *(graph + min_weighted_node * vertices_number + i) < weight[i]) {
 			weight[i] = weight[min_weighted_node] + *(graph + min_weighted_node * vertices_number + i);
-			path[i] = min_weighted_node; //Tracks path.
+			path[i] = min_weighted_node; //Tracks path. The elemenet of the array path[] is previous vertex, it's index is next vertex.
 		}
 	}
 }
@@ -133,7 +146,7 @@ void display_result(int weight[], int path[], int vertices_number, int source_ve
 				int *temp = (int *)malloc(vertices_number * sizeof(int));
 				int k = 0;
 				do {
-					j = path[j];
+					j = path[j]; //The elements of the array path[] and their indexes are compatible. With this assignment, exposing the shortest paths is possible.
 					temp[k++] = j; //Inserts the path into temp array, reversely.
 				} while (j != source_vertex);
 				for (int i = k - 1; i >= 0; i--) {
@@ -181,9 +194,9 @@ int main() {
 	HWND consoleWindow = GetConsoleWindow();
 	int screen_x = GetSystemMetrics(SM_CXSCREEN);
 	int screen_y = GetSystemMetrics(SM_CYSCREEN);
-	int console_x = 663;
+	int console_x = 669;
 	int console_y = 800;
-	SetWindowPos(consoleWindow, HWND_TOP, (screen_x - console_x) / 2, (screen_y - console_y) / 2 - 15, 663, 800, SWP_SHOWWINDOW); //Adjusts window settings.
+	SetWindowPos(consoleWindow, HWND_TOP, (screen_x - console_x) / 2, (screen_y - console_y) / 2 - 15, 669, 800, SWP_SHOWWINDOW); //Adjusts window settings.
 	for (int i = 0; i < 67; i++) {
 		printf("%s\n", edsger_dijkstra[i]);
 	}
@@ -192,24 +205,29 @@ int main() {
 	}
 	Sleep(3000);
 	system("cls");
-	cfi.dwFontSize.X = 11;
-	cfi.dwFontSize.Y = 23;
+	cfi.dwFontSize.X = 8;
+	cfi.dwFontSize.Y = 16;
 	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
-	SetWindowPos(consoleWindow, HWND_TOP, (screen_x - console_x) / 2, (screen_y - console_y) / 2 - 15, 663, 800, SWP_SHOWWINDOW);
+	SetWindowPos(consoleWindow, HWND_TOP, (screen_x - console_x) / 2, (screen_y - console_y) / 2 - 15, 669, 800, SWP_SHOWWINDOW);
 	do {
-		printf("1. Work on the existing graph.\n");
-		printf("2. Enter a new graph.\n");
-		printf("3. Clear screen.\n");
-		printf("4. Exit.\n");
+		printf("1. Work on the presentation graph.\n");
+		printf("2. Work on the report graph.\n");
+		printf("3. Enter a new graph.\n");
+		printf("4. Clear screen.\n");
+		printf("5. Exit.\n");
 		printf("Select an option: ");
 		int option;
-		scanf_s("%d", &option);
+		while (scanf_s("%d", &option) != 1) getchar(); //If user enters characters instead of integers, this getchar() discards characters.
 		switch (option) {
 		case 1:
 			printf("\n");
-			dijkstra((int*)graph_existing, 8, 0);
+			dijkstra((int*)presentation_graph, 8, 0);
 			break;
 		case 2:
+			printf("\n");
+			dijkstra((int*)report_graph, 10, 0);
+			break;
+		case 3:
 			printf("\nEnter the number of vertices: ");
 			int vertices_number;
 			while (scanf_s("%d", &vertices_number) != 1) getchar(); //If user enters characters instead of integers, this getchar() discards characters.
@@ -224,7 +242,7 @@ int main() {
 			printf("\n");
 			dijkstra((int*)graph_new, vertices_number, source_vertex);
 			break;
-		case 3:
+		case 4:
 			system("cls");
 			break;
 		default:
